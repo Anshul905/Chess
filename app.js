@@ -1,7 +1,7 @@
 const express = require("express")
 const socket = require("socket.io")
 const http = require("http")
-const { Chess, BLACK } = require("chess.js")
+const { Chess } = require("chess.js")
 const path = require("path")
 const { title } = require("process")
 
@@ -11,13 +11,13 @@ const io = socket(server);
 
 const chess = new Chess() ;
 let players = {} ;
-let currentPlayer = "W" ;
+let currentPlayer = "w" ;
 
 app.set("view engine","ejs") ;
 app.use(express.static(path.join(__dirname,"public"))) ;
 
 app.get("/",(req,res) => {
-    res.render("index" , { title : "Chess Game" });
+    res.render("index" , { title : "My Chess Game" });
 });
 
 
@@ -30,13 +30,15 @@ io.on("connection" , (uniquesocket) => {
 
     if( !players.white ){
         players.white =  uniquesocket.id ;
-        uniquesocket.emit("w");
+        uniquesocket.emit("playerRole","w");
     }else if( !players.black ){
         players.black =  uniquesocket.id ;
-        uniquesocket.emit("b");
+        uniquesocket.emit("playerRole","b");
     }else{
-        uniquesocket.emit("s");
+        uniquesocket.emit("spectatorRole");
     }
+
+
 
     uniquesocket.on("disconnect" , () => {
 
@@ -64,6 +66,33 @@ io.on("connection" , (uniquesocket) => {
         }
         
     });
+
+    uniquesocket.on("move",(curMove)=>{
+
+        try {
+            currentPlayer = chess.turn() ;
+            console.log(currentPlayer);
+            if( currentPlayer==="w" && uniquesocket.id != players.white ) return ;
+            if( currentPlayer==="b" && uniquesocket.id != players.black ) return ;
+            
+            const result = chess.move(curMove);
+            console.log(result);
+            
+            if(result){
+                console.log("move is valid" , curMove);
+                io.emit("move" , curMove);
+                io.emit("boardState" , chess.fen() ); 
+            }else{
+                console.log("move is invalid" , curMove);
+                uniquesocket.emit("invalidMove",curMove);
+            }
+        } catch (error) {
+            console.log("Somewent went wrong -> error : " , error);
+            uniquesocket.emit("Invalid move",curMove);
+        }
+    });
+
+    
 
 }) ;
 

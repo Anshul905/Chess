@@ -5,7 +5,7 @@ Chess Game Initialization:
 Create an instance of the Chess class from the chess.js library to manage the game logic (const chess = new Chess();).
 
 DOM Elements:
-Select the HTML element with the ID "chessboard" to render the chessboard (const boardElement = document.querySelector("#chessboard");).
+Select the HTML element with the ID "chessboard" to render the chessboard (const boardElement = document.querySelector(".chessboard");).
 
 Drag and Drop:
 Implement drag and drop functionality for moving chess pieces on the board.
