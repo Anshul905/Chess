@@ -14,7 +14,7 @@
 
 - Configure Express app:
     - Use EJS templating engine
-    - Serve static files from 'public' directory
+    - Serve static files from 'public' directory using middleware
 
 - Define route for root URL
 - Render EJS template "index"
