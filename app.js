@@ -1,7 +1,7 @@
 const express = require("express")
 const socket = require("socket.io")
 const http = require("http")
-const { Chess } = require("chess.js")
+const { Chess, BLACK } = require("chess.js")
 const path = require("path")
 const { title } = require("process")
 
@@ -21,20 +21,51 @@ app.get("/",(req,res) => {
 });
 
 
-io.on("connection" , (uniquesocket) => {
-    console.log("player is connected");
 
-    uniquesocket.on("churan" , () => {
-        console.log("churan received");
-        io.emit("churan paapdi")
-    } )
+io.on("connection" , (uniquesocket) => {
+    if( !players.white || !players.black )
+        console.log("Player is connected");
+    else
+        console.log("Spectator is connected");
+
+    if( !players.white ){
+        players.white =  uniquesocket.id ;
+        uniquesocket.emit("w");
+    }else if( !players.black ){
+        players.black =  uniquesocket.id ;
+        uniquesocket.emit("b");
+    }else{
+        uniquesocket.emit("s");
+    }
 
     uniquesocket.on("disconnect" , () => {
-        console.log("player is disconnected");
-    } )
+
+        // if( uniquesocket.id === players.white || uniquesocket.id === players.black){
+        //     if( uniquesocket.id === players.white ){
+        //         console.log("player with WHITE is disconnected");
+        //         console.log("BLACK wins");
+        //     }else if( uniquesocket.id === players.black ){
+        //         console.log("player with BLACK is disconnected");
+        //         console.log("WHITE wins");
+        //     }    
+        //     delete players.white ;
+        //     delete players.black ;
+        //     console.log("GAME END");
+        // }else{
+        //     console.log("Spectator is disconnected");
+        // }
+
+        if( uniquesocket.id === players.white ){
+            console.log("player with WHITE is disconnected");
+            delete players.white ;
+        }else if( uniquesocket.id === players.black ){
+            console.log("player with BLACK is disconnected");
+            delete players.black ;
+        }
+        
+    });
 
 }) ;
-
 
 
 const PORT = process.env.PORT || 3000;
