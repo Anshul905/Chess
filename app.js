@@ -21,8 +21,18 @@ app.get("/",(req,res) => {
 });
 
 
-io.on("connection" , (socket) => {
-    console.log("Connected player is connected");
+io.on("connection" , (uniquesocket) => {
+    console.log("player is connected");
+
+    uniquesocket.on("churan" , () => {
+        console.log("churan received");
+        io.emit("churan paapdi")
+    } )
+
+    uniquesocket.on("disconnect" , () => {
+        console.log("player is disconnected");
+    } )
+
 }) ;
 
 
