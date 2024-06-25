@@ -21,6 +21,10 @@ app.get("/",(req,res) => {
 });
 
 
+io.on("connection" , (socket) => {
+    console.log("Connected player is connected");
+}) ;
+
 
 
 const PORT = process.env.PORT || 3000;
