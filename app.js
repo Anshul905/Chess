@@ -66,10 +66,11 @@ io.on("connection" , (uniquesocket) => {
             if(result){
                 console.log("move is valid" , curMove);
                 
+                const isStalemate = chess.isStalemate();
                 const isCheck = chess.isCheck();
                 const isCheckmate = chess.isCheckmate();
-                const status = isCheckmate ? 'Checkmate!' : isCheck ? 'Check!' : 'continues';
-                
+                const status = isStalemate ? "Stalemate!" : isCheckmate ? 'Checkmate!' : isCheck ? 'Check!' : 'continues';
+                                
                 io.emit("move" , curMove);
                 io.emit("boardState" , chess.fen() ); 
 

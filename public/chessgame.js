@@ -166,6 +166,10 @@ socket.on("moveResult", function (data) {
                 gr.innerHTML =  "Game Result : " + currentPlayer + " Wins"
                 cp.innerHTML = "Game Ends"
             }
+            if( data.gameStatus=="Stalemate!" ){
+                gr.innerHTML =  "Game Result : Draw"
+                cp.innerHTML = "Game Ends"
+            }
     
             //last move detail
             p.innerHTML =  "Opponent's Late Move : " + piecesName[data.result.piece];
