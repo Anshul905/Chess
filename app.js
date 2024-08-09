@@ -125,19 +125,21 @@ io.on("connection" , (uniquesocket) => {
     uniquesocket.on('resetGame', () => {
         console.log('reset kardo');
         chess.reset();
-        console.log(players);
         io.emit('resetGameConfirmed');
     });
     
 
     uniquesocket.on('newGameButton', () => {
-        console.log('reset kardo');
+        console.log('new game kardo');
         chess.reset();
-        console.log(players);
         io.emit('newGameConfirmed');
     });
 
-
+    
+    uniquesocket.on('loadButton', () => {
+        console.log('load kardo');
+        io.emit('loadGameConfirmed');
+    });
 
 }) ;
 

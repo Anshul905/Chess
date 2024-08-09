@@ -11,7 +11,6 @@ let playerRole = null ;
 
 
 
-
 const renderBoard = () => {
 
     console.log('rendering board..... ');
@@ -24,7 +23,7 @@ const renderBoard = () => {
     
     board.forEach( (row , rowIndex) => {
         row.forEach( (square , colIndex ) => {
-            console.log(square);
+            // console.log(square);
             
             // sqEle
             const sqEle = document.createElement("div");
@@ -40,7 +39,7 @@ const renderBoard = () => {
                 pieceEle.classList.add("piece",square.color === "w" ? "white" : "black" )
                 pieceEle.innerText = getPieceUnicode(square) ;
                 pieceEle.draggable = playerRole === square.color ; //white can only drag white piece
-                console.log(playerRole);
+                // console.log(playerRole);
                 
 
                 pieceEle.addEventListener("dragstart", (e) => {
@@ -243,6 +242,17 @@ resetButton.addEventListener('click', () => {
 });
 socket.on("resetGameConfirmed" , function() { 
     console.log('resetGameConfirmed in chessgame.js');
+
+    // Storing data
+    const data = {
+        fen : chess.fen(),
+        cpText : cp.innerHTML ,
+        gsText : gs.innerHTML ,
+        grText : gr.innerHTML ,
+        pText : p.innerHTML ,
+    }
+    sessionStorage.setItem('gameState', JSON.stringify(data));
+
     chess.reset();
     cp.innerHTML = "White to play now"
     gs.innerHTML = "Game Status : continues"
@@ -258,7 +268,18 @@ newGameButton.addEventListener('click', () => {
     socket.emit('newGameButton');
 });
 socket.on("newGameConfirmed" , function() { 
-    console.log('resetGameConfirmed in chessgame.js');
+    console.log('newGameConfirmed in chessgame.js');
+
+    // Storing data
+    const data = {
+        fen : chess.fen(),
+        cpText : cp.innerHTML ,
+        gsText : gs.innerHTML ,
+        grText : gr.innerHTML ,
+        pText : p.innerHTML ,
+    }
+    sessionStorage.setItem('gameState', JSON.stringify(data));
+
     chess.reset();
     cp.innerHTML = "White to play now"
     gs.innerHTML = "Game Status : continues"
@@ -269,8 +290,29 @@ socket.on("newGameConfirmed" , function() {
 
 
 
+const loadButton = document.getElementById('loadButton');
+loadButton.addEventListener('click', () => {
+    socket.emit('loadButton');
+});
+socket.on("loadGameConfirmed" , function() { 
+    console.log('loadGameConfirmed in chessgame.js');
 
+    // Retrieving data
+    const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
+    if (savedGameState) {
+        console.log(savedGameState);
+        chess.load( savedGameState.fen );
+        cp.innerHTML = savedGameState.cpText;
+        gs.innerHTML = savedGameState.gsText;
+        gr.innerHTML = savedGameState.grText;
+        p.innerHTML = savedGameState.pText;
+    
+    } else {
+        console.log('no data');
+    }
 
+    renderBoard();  
+});
 
 
 

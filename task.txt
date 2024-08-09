@@ -8,10 +8,13 @@ Opponents Last Move Details
 Game Result - stalemate
 last move highlighed color 
 Reset button / New Game button -> Same
+load button - you can only see last saved state that you had saved while resetting or new game , you can not start the game from there
 ----------------------
 Future Work - 
 ----------------------
-Save the state while reloading and get back ( load button )
+load button - try to start the game from saved state
+Save the state while reloading - state should not alter if reloads  
+
 click on effect - show possible moves
 a-h 1-8 marker
 Effect on check and stalemate and captures
