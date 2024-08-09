@@ -8,14 +8,23 @@ let draggedPiece = null ;
 let sourceSquare = null ;
 let playerRole = null ;
 
+
+
+
+
 const renderBoard = () => {
+
+    console.log('rendering board..... ');
+
+    
     const board = chess.board()
     boardElement.innerHTML = "" ;
-    console.log(board);
+    // console.log(board);
     // return ;
     
     board.forEach( (row , rowIndex) => {
         row.forEach( (square , colIndex ) => {
+            console.log(square);
             
             // sqEle
             const sqEle = document.createElement("div");
@@ -25,10 +34,14 @@ const renderBoard = () => {
             
             
             if(square){
+                // piece is present in the square - creating piece and making it draggable
+                
                 const pieceEle = document.createElement("div");
                 pieceEle.classList.add("piece",square.color === "w" ? "white" : "black" )
                 pieceEle.innerText = getPieceUnicode(square) ;
-                pieceEle.draggable = playerRole === square.color ;
+                pieceEle.draggable = playerRole === square.color ; //white can only drag white piece
+                console.log(playerRole);
+                
 
                 pieceEle.addEventListener("dragstart", (e) => {
                     if(pieceEle.draggable){
@@ -67,10 +80,12 @@ const renderBoard = () => {
     if( playerRole == 'b' ) boardElement.classList.add("flipped")
     else boardElement.classList.remove("flipped") ;
 
+    console.log('rendering board..... ended');
+
 }
 
 
-const handleMove = (source,target) => {    
+const handleMove = (source,target) => {        
     const move = {
         from : `${String.fromCharCode(97+source.col)}${8-source.row}` , 
         to   : `${String.fromCharCode(97+target.col)}${8-target.row}` , 
@@ -100,24 +115,33 @@ const getPieceUnicode = (piece) => {
 
 
 socket.on("playerRole" , function(role) { 
+    console.log('1. playerRole in chessgame.js');
+    
     const pieceColor = role==="w" ? "WHITE" : "BLACK" ;
     console.log(`You are assigned with ${pieceColor} pieces`); 
     playerRole = role ;
     renderBoard();
 });
 socket.on("spectatorRole" , function() { 
-    console.log("You are a spectator");
+    console.log('1. spectatorRole in chessgame.js');
+    console.log("1. You are a spectator");
     playerRole = null ;
     renderBoard();
 });
+
 socket.on("boardState" , function(fen) { 
+    console.log('7. boardState in chessgame.js');
+
     chess.load(fen);
     renderBoard();
 });
 socket.on("move" , function(curMove) { 
+    console.log('6. move in chessgame.js');
+
     chess.move(curMove);
-    renderBoard();
+    renderBoard();  
 });
+
 
 
 
@@ -136,11 +160,11 @@ const piecesName = {
     K: 'King',
 };
 
+
 const cp = document.querySelector("#currentPlayer");
 const gs = document.querySelector("#gameStatus");
 const gr = document.querySelector("#gameResult");
 const p = document.querySelector("#pieceDetail");
-
 
 socket.on("moveResult", function (data) {
 
@@ -202,15 +226,56 @@ function getTargetBox(row, col) {
 
     for (const item of gridItems) {
       if (item.dataset.row === row.toString() && item.dataset.col === col.toString()) {
-        console.log(item);
+        // console.log(item);
         return item;
       }
     }
     return null;
 }
 
-renderBoard();
 
+
+
+// reset 
+const resetButton = document.getElementById('resetButton');
+resetButton.addEventListener('click', () => {
+    socket.emit('resetGame');
+});
+socket.on("resetGameConfirmed" , function() { 
+    console.log('resetGameConfirmed in chessgame.js');
+    chess.reset();
+    cp.innerHTML = "White to play now"
+    gs.innerHTML = "Game Status : continues"
+    gr.innerHTML = "Game Result : None"
+    p.innerHTML = "Opponent's Late Move : None"
+    renderBoard();  
+});
+
+
+
+const newGameButton = document.getElementById('newGameButton');
+newGameButton.addEventListener('click', () => {
+    socket.emit('newGameButton');
+});
+socket.on("newGameConfirmed" , function() { 
+    console.log('resetGameConfirmed in chessgame.js');
+    chess.reset();
+    cp.innerHTML = "White to play now"
+    gs.innerHTML = "Game Status : continues"
+    gr.innerHTML = "Game Result : None"
+    p.innerHTML = "Opponent's Late Move : None"
+    renderBoard();  
+});
+
+
+
+
+
+
+
+
+
+renderBoard();
 
 
 

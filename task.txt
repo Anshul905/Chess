@@ -7,13 +7,13 @@ Game Result
 Opponents Last Move Details
 Game Result - stalemate
 last move highlighed color 
-
+Reset button / New Game button -> Same
 ----------------------
 Future Work - 
 ----------------------
-a-h 1-8 marker
+Save the state while reloading and get back ( load button )
 click on effect - show possible moves
-New Game button 
+a-h 1-8 marker
 Effect on check and stalemate and captures
 
 

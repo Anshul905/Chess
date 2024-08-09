@@ -13,13 +13,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* .status {
+        .details {
             font-size: 24px;
             font-weight: bold;
         }
-        .checkmate { color: red; }
+        /* .status {
+            font-size: 24px;
+            font-weight: bold;
+        } */
+        /* .checkmate { color: red; }
         .check { color: orange; }
         .continue { color: green; } */
+
+
+        .button{
+            border: 2px solid rgb(168, 121, 121);
+            border-radius: 20px;
+            margin: 10px auto;
+            color: black;
+            padding: 10px 30px;
+            background-color: rgb(108, 134, 134);
+        }
+        .button:hover{
+            background-color: rgb(88, 173, 173);
+        }
     </style>
         
 </head>
@@ -32,17 +49,22 @@
             Chess Board
         </div>
         
-        <div class="gameData">
+        <div class="gameData details"> 
             <h1 id="currentPlayer">White to play now</h1> 
             <h1 id="gameStatus">Game Status : continues</h1>
             <h1 id="gameResult">Game Result : None</h1>
             <h1 id="pieceDetail">Opponent's Late Move : None</h1>
+            <button id="resetButton" class="button reset">Reset</button>
+            <button id="newGameButton" class="button newGame">New Game</button>
         </div>
         
 
     </div>
     
-    
+    <!-- <script src="../file.js"></script> -->
+    <script src="file.js"></script>
+
+
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
     integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
     crossorigin="anonymous"></script>
