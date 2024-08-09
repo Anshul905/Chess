@@ -4,21 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- <title>Document</title> -->
+    <title><%= title %></title>
+
     <link rel="stylesheet" href="../styles.css">
     <!-- <link rel="stylesheet" href="../output.css"> -->
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-
+    <style>
+        /* .status {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .checkmate { color: red; }
+        .check { color: orange; }
+        .continue { color: green; } */
+    </style>
+        
 </head>
 
 <body>
     
     <div class="w-full h-screen flex justify-center items-center bg-zinc-900">
+        
         <div class="chessboard w-96 h-96 bg-red-800">
-            Chess
+            Chess Board
         </div>
+        
+        <div class="gameData">
+            <h1 id="currentPlayer">White to play now</h1> 
+            <h1 id="gameStatus">Game Status : continues</h1>
+            <h1 id="gameResult">Game Result : None</h1>
+            <h1 id="pieceDetail">Opponent's Late Move : None</h1>
+        </div>
+        
+
     </div>
     
     
@@ -31,6 +52,8 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <script src="/chessgame.js"></script>
+
+    
 </body>
 
 </html>
