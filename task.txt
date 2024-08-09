@@ -6,20 +6,18 @@ Game status
 Game Result
 Opponents Last Move Details
 Game Result - stalemate
+last move highlighed color 
 
 ----------------------
 Future Work - 
 ----------------------
-
 a-h 1-8 marker
-last move highlighed color 
-
+click on effect - show possible moves
+New Game button 
 Effect on check and stalemate and captures
 
-offer draw button
+
+offer draw button , resign button 
 Undo Redo
-New Game button 
-
 Winning %
-
 points for pieces

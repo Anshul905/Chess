@@ -11,26 +11,22 @@ let playerRole = null ;
 const renderBoard = () => {
     const board = chess.board()
     boardElement.innerHTML = "" ;
-    // console.log(board);
+    console.log(board);
     // return ;
+    
     board.forEach( (row , rowIndex) => {
         row.forEach( (square , colIndex ) => {
-
+            
             // sqEle
             const sqEle = document.createElement("div");
-            sqEle.classList.add(
-                "square" , 
-                ( rowIndex + colIndex ) % 2 === 0 ? "light" : "dark"
-            );
+            sqEle.classList.add( "square" , ( rowIndex + colIndex ) % 2 === 0 ? "light" : "dark" );
             sqEle.dataset.row = rowIndex ;
             sqEle.dataset.col = colIndex ;
             
+            
             if(square){
                 const pieceEle = document.createElement("div");
-                pieceEle.classList.add(
-                    "piece",
-                    square.color === "w" ? "white" : "black" 
-                )
+                pieceEle.classList.add("piece",square.color === "w" ? "white" : "black" )
                 pieceEle.innerText = getPieceUnicode(square) ;
                 pieceEle.draggable = playerRole === square.color ;
 
@@ -174,7 +170,14 @@ socket.on("moveResult", function (data) {
             //last move detail
             p.innerHTML =  "Opponent's Late Move : " + piecesName[data.result.piece];
             p.innerHTML += " ( " + data.result.from + " to " + data.result.to + " )";
+    
             
+            //highlight last move 
+            highlightPlaceAfterMove( data.result.from );
+            highlightPlaceAfterMove( data.result.to );
+
+
+
     
         } else {
             console.log(data.error);
@@ -185,6 +188,26 @@ socket.on("moveResult", function (data) {
 
 });
 
+function highlightPlaceAfterMove( pos ) {
+    const r = 8-pos[1] ;
+    const c = (pos[0]).charCodeAt(0) - 97;
+    const start = getTargetBox(r, c); 
+    if (start) {
+        start.style.backgroundColor =  "#a8dd16";
+    }            
+}
+
+function getTargetBox(row, col) {
+    const gridItems = document.querySelectorAll('.square');
+
+    for (const item of gridItems) {
+      if (item.dataset.row === row.toString() && item.dataset.col === col.toString()) {
+        console.log(item);
+        return item;
+      }
+    }
+    return null;
+}
 
 renderBoard();
 

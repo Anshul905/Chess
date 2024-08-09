@@ -31,11 +31,13 @@ body{
 }
 
 .square.light {
-    background-color: #f0d9b5;
+    /* background-color: #f0d9b5; */
+    background-color: #cfdb9a;
 }
 
 .square.dark {
-    background-color: #b58863;
+    /* background-color: #b58863; */
+    background-color: #579b45;
 }
 
 .piece {
