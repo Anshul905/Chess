@@ -10,14 +10,18 @@ const server = http.createServer(app);
 const io = socket(server);
 
 const chess = new Chess() ;
+
 let players = {} ;
 let currentPlayer = "w" ;
 
 app.set("view engine","ejs") ;
-app.use(express.static(path.join(__dirname,'public'))) ;
+app.use(express.static(path.join(__dirname,"public"))) ;
 
 app.get("/",(req,res) => {
-    res.render("index" , { title : "My Chess Game" });
+    data = {  
+        title : "My Chess Game",
+    }
+    res.render("index" , data);
 });
 
 
@@ -27,6 +31,7 @@ io.on("connection" , (uniquesocket) => {
         console.log("Player is connected");
     else
         console.log("Spectator is connected");
+
 
     if( !players.white ){
         players.white =  uniquesocket.id ;
@@ -39,24 +44,7 @@ io.on("connection" , (uniquesocket) => {
     }
 
 
-
     uniquesocket.on("disconnect" , () => {
-
-        // if( uniquesocket.id === players.white || uniquesocket.id === players.black){
-        //     if( uniquesocket.id === players.white ){
-        //         console.log("player with WHITE is disconnected");
-        //         console.log("BLACK wins");
-        //     }else if( uniquesocket.id === players.black ){
-        //         console.log("player with BLACK is disconnected");
-        //         console.log("WHITE wins");
-        //     }    
-        //     delete players.white ;
-        //     delete players.black ;
-        //     console.log("GAME END");
-        // }else{
-        //     console.log("Spectator is disconnected");
-        // }
-
         if( uniquesocket.id === players.white ){
             console.log("player with WHITE is disconnected");
             delete players.white ;
@@ -64,31 +52,45 @@ io.on("connection" , (uniquesocket) => {
             console.log("player with BLACK is disconnected");
             delete players.black ;
         }
-        
     });
 
     uniquesocket.on("move",(curMove)=>{
-
         try {
             currentPlayer = chess.turn() ;
-            console.log(currentPlayer);
+            console.log('currentPlayer' , currentPlayer);
             if( currentPlayer==="w" && uniquesocket.id != players.white ) return ;
             if( currentPlayer==="b" && uniquesocket.id != players.black ) return ;
             
-            const result = chess.move(curMove);
-            console.log(result);
+            const result = chess.move(curMove);          
             
             if(result){
                 console.log("move is valid" , curMove);
+                
+                const isCheck = chess.isCheck();
+                const isCheckmate = chess.isCheckmate();
+                const status = isCheckmate ? 'Checkmate!' : isCheck ? 'Check!' : 'continues';
+                
                 io.emit("move" , curMove);
                 io.emit("boardState" , chess.fen() ); 
+
+                const data = { 
+                    success: true, 
+                    currentPlayer : currentPlayer,
+                    gameStatus : status , 
+                    move: curMove , 
+                    result : result , 
+                } ;
+
+                io.emit('moveResult', data ); // Send success response
+                console.log('sent move result to frontend');
+            
             }else{
                 console.log("move is invalid" , curMove);
-                uniquesocket.emit("invalidMove",curMove);
-            }
-        } catch (error) {
-            console.log("Somewent went wrong -> error : " , error);
-            uniquesocket.emit("Invalid move",curMove);
+                io.emit('moveResult', { success: false, error: 'move is invalid' }); // Send failure response 
+            } 
+        }catch (error) {
+            console.log(error);
+            io.emit('moveResult', { success: false, error: error.message }); // Send failure response 
         }
     });
 

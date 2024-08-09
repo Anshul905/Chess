@@ -3,6 +3,7 @@ const chess = new Chess();
 // console.log(chess); //very important 
 const boardElement = document.querySelector(".chessboard");
 
+
 let draggedPiece = null ;
 let sourceSquare = null ;
 let playerRole = null ;
@@ -11,7 +12,7 @@ const renderBoard = () => {
     const board = chess.board()
     boardElement.innerHTML = "" ;
     // console.log(board);
-
+    // return ;
     board.forEach( (row , rowIndex) => {
         row.forEach( (square , colIndex ) => {
 
@@ -73,13 +74,13 @@ const renderBoard = () => {
 }
 
 
-const handleMove = (source,target) => {
+const handleMove = (source,target) => {    
     const move = {
         from : `${String.fromCharCode(97+source.col)}${8-source.row}` , 
         to   : `${String.fromCharCode(97+target.col)}${8-target.row}` , 
         promotion : 'q'
     }
-    socket.emit("move",move);
+    socket.emit("move",move);    
 }
 
 const getPieceUnicode = (piece) => {
@@ -124,4 +125,65 @@ socket.on("move" , function(curMove) {
 
 
 
+const piecesName = {
+    p: 'Pawn',
+    r: 'Rook',
+    n: 'Knight',
+    b: 'Bishop',
+    q: 'Queen',
+    k: 'King',
+    P: 'Pawn',
+    R: 'Rook',
+    N: 'Knight',
+    B: 'Bishop',
+    Q: 'Queen',
+    K: 'King',
+};
+
+const cp = document.querySelector("#currentPlayer");
+const gs = document.querySelector("#gameStatus");
+const gr = document.querySelector("#gameResult");
+const p = document.querySelector("#pieceDetail");
+
+
+socket.on("moveResult", function (data) {
+
+    try {        
+        if (data.success) {
+            console.log("Move successful:", data);
+    
+            const nextPlayer = data.currentPlayer == "w" ? "BLACK" : "WHITE" 
+            const currentPlayer = data.currentPlayer == "w" ? "WHITE" : "BLACK"
+    
+            //who to move next
+            cp.innerHTML = nextPlayer + " to play now"
+    
+            //game status
+            gs.innerHTML = "Game Status : " + data.gameStatus
+    
+            //game result
+            if( data.gameStatus=="Checkmate!" ){
+                gr.innerHTML =  "Game Result : " + currentPlayer + " Wins"
+                cp.innerHTML = "Game Ends"
+            }
+    
+            //last move detail
+            p.innerHTML =  "Opponent's Late Move : " + piecesName[data.result.piece];
+            p.innerHTML += " ( " + data.result.from + " to " + data.result.to + " )";
+            
+    
+        } else {
+            console.log(data.error);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+});
+
+
 renderBoard();
+
+
+
+

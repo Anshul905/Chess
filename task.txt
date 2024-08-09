@@ -1,0 +1,24 @@
+----------------------
+Done 
+----------------------
+whose turn
+Game status 
+Game Result
+Opponents Last Move Details
+
+
+----------------------
+Future Work - 
+----------------------
+Game Result - stalemate
+
+a-h 1-8 marker
+last move highlighed color 
+
+Effect on check and stalemate and captures
+
+offer draw button
+Undo Redo
+New Game button 
+
+Winning %
