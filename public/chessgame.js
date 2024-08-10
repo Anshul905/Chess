@@ -233,7 +233,7 @@ function getTargetBox(row, col) {
 
 
 
-// reset 
+// reset button functionality 
 const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', () => {
     socket.emit('resetGame');
@@ -260,7 +260,7 @@ socket.on("resetGameConfirmed" , function() {
 });
 
 
-
+//new button functionality 
 const newGameButton = document.getElementById('newGameButton');
 newGameButton.addEventListener('click', () => {
     socket.emit('newGameButton');
@@ -288,7 +288,7 @@ socket.on("newGameConfirmed" , function() {
 });
 
 
-
+//load button functionality 
 const loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', () => {
     socket.emit('loadButton');
@@ -358,46 +358,6 @@ window.addEventListener('beforeunload', saveState);
 // Load state on page load
 window.addEventListener('load', loadState);
 
-
-// function loading() {
-//     console.log("Page reloaded!");
-    
-//     const data = {
-//         fen : chess.fen(),
-//         cpText : cp.innerHTML ,
-//         gsText : gs.innerHTML ,
-//         grText : gr.innerHTML ,
-//         pText : p.innerHTML ,
-//     }
-//     sessionStorage.setItem('gameState', JSON.stringify(data));
-
-//     console.log('data');
-//     console.log(data);
-    
-    
-
-
-//     // Retrieving data
-//     const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
-//     if (savedGameState) {
-//         console.log(savedGameState);
-//         chess.reset();
-//         chess.load( savedGameState.fen );
-//         cp.innerHTML = savedGameState.cpText;
-//         gs.innerHTML = savedGameState.gsText;
-//         gr.innerHTML = savedGameState.grText;
-//         p.innerHTML = savedGameState.pText;
-    
-//     } else {
-//         console.log('no data');
-//     }
-
-
-// }
-  
-// window.onload = loading;
-
-  
 
 renderBoard();
 
