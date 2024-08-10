@@ -14,6 +14,11 @@ const chess = new Chess() ;
 let players = {} ;
 let currentPlayer = "w" ;
 
+
+let fen ;
+let new_game = false
+let reset = false;
+
 app.set("view engine","ejs") ;
 app.use(express.static(path.join(__dirname,"public"))) ;
 
@@ -124,21 +129,36 @@ io.on("connection" , (uniquesocket) => {
 
     uniquesocket.on('resetGame', () => {
         console.log('reset kardo');
+        
+        fen = chess.fen();
         chess.reset();
         io.emit('resetGameConfirmed');
+        
+        // reset = true;
     });
     
 
     uniquesocket.on('newGameButton', () => {
+        console.log(chess.board());        
+
         console.log('new game kardo');
         chess.reset();
+        fen = chess.fen();
         io.emit('newGameConfirmed');
+
+        console.log(chess.board());        
+
+        // reset = false;
     });
 
     
     uniquesocket.on('loadButton', () => {
-        console.log('load kardo');
+        console.log('load kardo'); 
+        
+        chess.load( fen ) ;
+    
         io.emit('loadGameConfirmed');
+
     });
 
 }) ;

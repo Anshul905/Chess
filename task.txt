@@ -7,13 +7,14 @@ Game Result
 Opponents Last Move Details
 Game Result - stalemate
 last move highlighed color 
-Reset button / New Game button -> Same
-load button - you can only see last saved state that you had saved while resetting or new game , you can not start the game from there
+Reset button -> resets the board to initial state , you can load the previous saved state and play from there 
+New Game button -> resets the board to initial state but now you can not load the previous state , you will have to start from the fresh 
+load button -> you can load the saved state and can continue playing the game from there ( if saved the game by reset, not new game )
+while reloading -> it saves the state and can continue from there, also reloading does not alter the game state
+
 ----------------------
 Future Work - 
 ----------------------
-load button - try to start the game from saved state
-Save the state while reloading - state should not alter if reloads  
 
 click on effect - show possible moves
 a-h 1-8 marker

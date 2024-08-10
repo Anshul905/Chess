@@ -270,20 +270,21 @@ newGameButton.addEventListener('click', () => {
 socket.on("newGameConfirmed" , function() { 
     console.log('newGameConfirmed in chessgame.js');
 
+    chess.reset();
+
     // Storing data
     const data = {
         fen : chess.fen(),
-        cpText : cp.innerHTML ,
-        gsText : gs.innerHTML ,
-        grText : gr.innerHTML ,
-        pText : p.innerHTML ,
+        cpText : "White to play now" ,
+        gsText : "Game Status : continues" ,
+        grText : "Game Status : continues" ,
+        pText : "Opponent's Late Move : None" ,
     }
     sessionStorage.setItem('gameState', JSON.stringify(data));
-
-    chess.reset();
+    
     cp.innerHTML = "White to play now"
     gs.innerHTML = "Game Status : continues"
-    gr.innerHTML = "Game Result : None"
+    gr.innerHTML = "Game Status : continues"
     p.innerHTML = "Opponent's Late Move : None"
     renderBoard();  
 });
@@ -301,21 +302,104 @@ socket.on("loadGameConfirmed" , function() {
     const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
     if (savedGameState) {
         console.log(savedGameState);
+        chess.reset();
         chess.load( savedGameState.fen );
         cp.innerHTML = savedGameState.cpText;
         gs.innerHTML = savedGameState.gsText;
         gr.innerHTML = savedGameState.grText;
         p.innerHTML = savedGameState.pText;
+        renderBoard();
     
     } else {
         console.log('no data');
     }
-
-    renderBoard();  
 });
 
 
 
+function saveState() {
+    console.log('saving data');
+    
+    const data = {
+        fen : chess.fen(),
+        cpText : cp.innerHTML ,
+        gsText : gs.innerHTML ,
+        grText : gr.innerHTML ,
+        pText : p.innerHTML ,
+    }
+    sessionStorage.setItem('gameState', JSON.stringify(data));
+    console.log('data');
+    console.log(data);
+    
+    
+}
+  
+function loadState() {
+    console.log('retrieving data');
+    
+    // Retrieving data
+    const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
+    if (savedGameState) {
+        console.log(savedGameState);
+        chess.reset();
+        chess.load( savedGameState.fen );
+        cp.innerHTML = savedGameState.cpText;
+        gs.innerHTML = savedGameState.gsText;
+        gr.innerHTML = savedGameState.grText;
+        p.innerHTML = savedGameState.pText;
+        renderBoard()
+    } else {
+        console.log('no data');
+    }
+
+}
+
+// Save state before reload
+window.addEventListener('beforeunload', saveState);
+
+// Load state on page load
+window.addEventListener('load', loadState);
+
+
+// function loading() {
+//     console.log("Page reloaded!");
+    
+//     const data = {
+//         fen : chess.fen(),
+//         cpText : cp.innerHTML ,
+//         gsText : gs.innerHTML ,
+//         grText : gr.innerHTML ,
+//         pText : p.innerHTML ,
+//     }
+//     sessionStorage.setItem('gameState', JSON.stringify(data));
+
+//     console.log('data');
+//     console.log(data);
+    
+    
+
+
+//     // Retrieving data
+//     const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
+//     if (savedGameState) {
+//         console.log(savedGameState);
+//         chess.reset();
+//         chess.load( savedGameState.fen );
+//         cp.innerHTML = savedGameState.cpText;
+//         gs.innerHTML = savedGameState.gsText;
+//         gr.innerHTML = savedGameState.grText;
+//         p.innerHTML = savedGameState.pText;
+    
+//     } else {
+//         console.log('no data');
+//     }
+
+
+// }
+  
+// window.onload = loading;
+
+  
 
 renderBoard();
 
