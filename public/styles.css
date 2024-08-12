@@ -6,8 +6,8 @@ body{
     display: grid;
     grid-template-columns: repeat(8, minmax(0, 1fr));
     grid-template-rows: repeat(8, minmax(0, 1fr));
-    width: 400px;
-    height: 400px;
+    width: 640px;
+    height: 640px;
     transform: rotate(0deg);
 }
 
@@ -41,7 +41,7 @@ body{
 }
 
 .piece {
-    font-size: 36px;
+    font-size: 48px;
     cursor: pointer;
 }
 
@@ -59,27 +59,57 @@ body{
 }
 
 
-        .details {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        /* .status {
-            font-size: 24px;
-            font-weight: bold;
-        } */
-        /* .checkmate { color: red; }
-        .check { color: orange; }
-        .continue { color: green; } */
+.details {
+    font-size: 24px;
+    font-weight: bold;
+}
+/* .status {
+    font-size: 24px;
+    font-weight: bold;
+} */
+/* .checkmate { color: red; }
+.check { color: orange; }
+.continue { color: green; } */
 
 
-        .button{
-            border: 2px solid rgb(168, 121, 121);
-            border-radius: 20px;
-            margin: 10px auto;
-            color: black;
-            padding: 10px 30px;
-            background-color: rgb(108, 134, 134);
-        }
-        .button:hover{
-            background-color: rgb(88, 173, 173);
-        }
+.button{
+    border: 2px solid rgb(168, 121, 121);
+    border-radius: 20px;
+    margin: 10px auto;
+    color: black;
+    padding: 10px 30px;
+    background-color: rgb(108, 134, 134);
+}
+.button:hover{
+    background-color: rgb(88, 173, 173);
+}
+
+.number{
+    position: relative;
+}
+.digit{
+    font-size: medium;
+    font-weight: bold;    
+    position: absolute;
+    transform: translate(-316%, -117%);
+}
+.letter{
+    font-size: medium;
+    font-weight: bold;    
+    position: absolute;
+    transform: translate(316%, 117%);
+}
+.whiteAlphaNum{
+    color: white;
+}
+.blackAlphaNum{
+    color: green;
+}
+
+
+.toLeft{
+    transform: translate(6430%, 117%) rotate(180deg);
+}
+.toBottom{
+    transform: translate(-316%, -2455%) rotate(180deg);
+}

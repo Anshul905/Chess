@@ -23,12 +23,56 @@ const renderBoard = () => {
         row.forEach( (square , colIndex ) => {
             // console.log(square);
             
+            
             // sqEle
             const sqEle = document.createElement("div");
             sqEle.classList.add( "square" , ( rowIndex + colIndex ) % 2 === 0 ? "light" : "dark" );
             sqEle.dataset.row = rowIndex ;
             sqEle.dataset.col = colIndex ;
             
+            console.log(rowIndex,colIndex);
+
+            
+            //marker a-h and 1-8
+            if( colIndex==0 ){
+                sqEle.classList.add('number');
+                const markerEle = document.createElement("div");
+                markerEle.classList.add("digit" , rowIndex%2==0 ? "blackAlphaNum" : "whiteAlphaNum" );
+                    markerEle.innerText = 8-rowIndex ;                
+                sqEle.appendChild(markerEle);
+
+                if( playerRole=="b" ){
+                    markerEle.classList.add('toLeft');
+                    markerEle.classList.add(rowIndex%2==1 ? "blackAlphaNum" : "whiteAlphaNum" );
+                    markerEle.classList.remove(rowIndex%2==0 ? "blackAlphaNum" : "whiteAlphaNum" );
+                } else{
+                     markerEle.classList.remove('toLeft');
+                     markerEle.classList.remove(rowIndex%2==1 ? "blackAlphaNum" : "whiteAlphaNum" );
+                     markerEle.classList.add(rowIndex%2==0 ? "blackAlphaNum" : "whiteAlphaNum" );
+                }
+            }
+
+            if( rowIndex==7 ){
+                sqEle.classList.add('alpha');
+                const markerEle = document.createElement("div");
+                markerEle.classList.add("letter" , colIndex%2==1 ? "blackAlphaNum" : "whiteAlphaNum" );
+                markerEle.innerText = String.fromCharCode(colIndex + 97);                
+                sqEle.appendChild(markerEle);
+
+                if( playerRole=="b" ){
+                    markerEle.classList.add('toBottom');
+                    markerEle.classList.add(colIndex%2==0 ? "blackAlphaNum" : "whiteAlphaNum" );
+                    markerEle.classList.remove(colIndex%2==1 ? "blackAlphaNum" : "whiteAlphaNum" );
+                } else{
+                     markerEle.classList.remove('toBottom');
+                     markerEle.classList.remove(colIndex%2==0 ? "blackAlphaNum" : "whiteAlphaNum" );
+                     markerEle.classList.add(colIndex%2==1 ? "blackAlphaNum" : "whiteAlphaNum" );
+                }
+
+
+            }
+            
+                
             
             if(square){
                 // piece is present in the square - creating piece and making it draggable
@@ -76,6 +120,8 @@ const renderBoard = () => {
 
     if( playerRole == 'b' ) boardElement.classList.add("flipped")
     else boardElement.classList.remove("flipped") ;
+
+
 
     console.log('rendering board..... ended');
 
