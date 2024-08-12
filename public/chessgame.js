@@ -9,8 +9,6 @@ let sourceSquare = null ;
 let playerRole = null ;
 
 
-
-
 const renderBoard = () => {
 
     console.log('rendering board..... ');
@@ -114,7 +112,7 @@ const getPieceUnicode = (piece) => {
 
 const pid = document.querySelector("#playerId");
 
-socket.on("playerRole" , function(role) { 
+socket.on("playerRole" , function({role,isOpponentAlreadyThere}) { 
     console.log('1. playerRole in chessgame.js');
     
     const pieceColor = role==="w" ? "WHITE" : "BLACK" ;
@@ -122,8 +120,29 @@ socket.on("playerRole" , function(role) {
     pid.innerHTML = "You are playing with "
     pid.innerHTML += role==="w" ? "White" : "Black"
     pid.innerHTML += " side"
-    
 
+    if ( isOpponentAlreadyThere ) {
+        console.log('Opponent is there');
+        
+        const lastMove = JSON.parse(localStorage.getItem('details'));
+        console.log(lastMove);
+        cp.innerHTML  = lastMove.cpText  
+        gs.innerHTML  = lastMove.gsText 
+        gr.innerHTML  = lastMove.grText 
+        p.innerHTML  = lastMove.pText  
+    } else {
+        console.log('Opponent is not there');
+
+        details = {
+            cpText : cp.innerHTML, 
+            gsText : gs.innerHTML ,
+            grText : gr.innerHTML ,
+            pText : p.innerHTML ,
+        }
+        console.log(details);
+        localStorage.setItem('details', JSON.stringify(details));
+      }
+      
     console.log(`You are assigned with ${pieceColor} pieces`); 
     playerRole = role ;
     renderBoard();
@@ -133,7 +152,16 @@ socket.on("spectatorRole" , function() {
     console.log("1. You are a spectator");
     playerRole = null ;
     pid.innerHTML = "You are a Spectator"
+
+    const lastMove = JSON.parse(localStorage.getItem('details'));
+    console.log(lastMove);
+    cp.innerHTML  = lastMove.cpText  
+    gs.innerHTML  = lastMove.gsText 
+    gr.innerHTML  = lastMove.grText 
+    p.innerHTML  = lastMove.pText  
+
     renderBoard();
+
 });
 
 socket.on("boardState" , function(fen) { 
@@ -148,6 +176,14 @@ socket.on("move" , function(curMove) {
     chess.move(curMove);
     renderBoard();  
 });
+
+
+socket.on("updateChessBoard" , function(fen) { 
+    console.log('updateChessBoard');
+    chess.load(fen);
+    renderBoard();
+});
+
 
 
 
@@ -201,6 +237,22 @@ socket.on("moveResult", function (data) {
             p.innerHTML += " ( " + data.result.from + " to " + data.result.to + " )";
     
             
+            
+            
+            
+            details = {
+                cpText : cp.innerHTML, 
+                gsText : gs.innerHTML ,
+                grText : gr.innerHTML ,
+                pText : p.innerHTML ,
+            }
+            console.log(details);
+            
+            localStorage.setItem('details', JSON.stringify(details));
+            
+
+
+
             //highlight last move 
             highlightPlaceAfterMove( data.result.from );
             highlightPlaceAfterMove( data.result.to );
@@ -267,6 +319,18 @@ socket.on("resetGameConfirmed" , function() {
     gs.innerHTML = "Game Status : continues"
     gr.innerHTML = "Game Result : None"
     p.innerHTML = "Opponent's Late Move : None"
+
+
+    details = {
+        cpText : cp.innerHTML, 
+        gsText : gs.innerHTML ,
+        grText : gr.innerHTML ,
+        pText : p.innerHTML ,
+    }
+    console.log(details);    
+    localStorage.setItem('details', JSON.stringify(details));
+
+    
     renderBoard();  
 });
 
@@ -287,15 +351,26 @@ socket.on("newGameConfirmed" , function() {
         fen : chess.fen(),
         cpText : "White to play now" ,
         gsText : "Game Status : continues" ,
-        grText : "Game Status : continues" ,
+        grText : "Game Result : None" ,
         pText : "Opponent's Late Move : None" ,
     }
     sessionStorage.setItem('gameState', JSON.stringify(data));
     
     cp.innerHTML = "White to play now"
     gs.innerHTML = "Game Status : continues"
-    gr.innerHTML = "Game Status : continues"
+    gr.innerHTML = "Game Result : None"
     p.innerHTML = "Opponent's Late Move : None"
+    
+
+    details = {
+        cpText : cp.innerHTML, 
+        gsText : gs.innerHTML ,
+        grText : gr.innerHTML ,
+        pText : p.innerHTML ,
+    }
+    console.log(details);    
+    localStorage.setItem('details', JSON.stringify(details));
+    
     renderBoard();  
 });
 
@@ -312,8 +387,18 @@ loadButton.addEventListener('click', () => {
 socket.on("loadGameConfirmed" , function() { 
     console.log('loadGameConfirmed in chessgame.js');
 
+
+    // if( typeof sessionStorage == 'undefined' || sessionStorage.getItem('gameState') == null ){
+    //     console.log("Nothing to load");
+    //     return ;
+    // }
+
+    // const receivedData  = sessionStorage.getItem('gameState') ;
+
     // Retrieving data
     const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
+    console.log(savedGameState);    
+    
     if (savedGameState) {
         console.log(savedGameState);
         chess.reset();
@@ -322,11 +407,23 @@ socket.on("loadGameConfirmed" , function() {
         gs.innerHTML = savedGameState.gsText;
         gr.innerHTML = savedGameState.grText;
         p.innerHTML = savedGameState.pText;
+
+        details = {
+            cpText : cp.innerHTML, 
+            gsText : gs.innerHTML ,
+            grText : gr.innerHTML ,
+            pText : p.innerHTML ,
+        }
+        console.log(details);    
+        localStorage.setItem('details', JSON.stringify(details));
+
         renderBoard();
     
     } else {
+        
         console.log('no data');
     }
+
 });
 
 
@@ -348,12 +445,27 @@ function saveState() {
     
 }
   
+
+
 function loadState() {
     console.log('retrieving data');
     
+
+    // if( typeof sessionStorage == 'undefined' || sessionStorage.getItem('gameState') == null ){
+    //     console.log("Nothing to load");
+    //     return ;
+    // }
+    // const receivedData  = sessionStorage.getItem('gameState') ;
+    // console.log('received data -' , receivedData);
+    
+
+
     // Retrieving data
     const savedGameState = JSON.parse(sessionStorage.getItem('gameState'));
+    console.log(savedGameState);
+
     if (savedGameState) {
+
         console.log(savedGameState);
         chess.reset();
         chess.load( savedGameState.fen );
@@ -361,7 +473,10 @@ function loadState() {
         gs.innerHTML = savedGameState.gsText;
         gr.innerHTML = savedGameState.grText;
         p.innerHTML = savedGameState.pText;
-        renderBoard()
+
+
+        
+        renderBoard();
     } else {
         console.log('no data');
     }

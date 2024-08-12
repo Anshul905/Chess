@@ -6,6 +6,7 @@ const { title } = require("process")
 
 const app = express() ;
 const http = require("http")
+const { log } = require("console")
 const server = http.createServer(app);
 const io = socket(server);
 
@@ -42,15 +43,18 @@ io.on("connection" , (uniquesocket) => {
         console.log("Spectator is connected");
 
 
-    // Assigning id to player and Broadcasts current player color 
+    // Assigning id to player and Broadcasts current player color and chess board
     if( !players.white ){
         players.white =  uniquesocket.id ;
-        uniquesocket.emit("playerRole","w");
+        uniquesocket.emit("playerRole",{ role:"w" , isOpponentAlreadyThere : players.black });
+        io.emit("updateChessBoard" , chess.fen() ); 
     }else if( !players.black ){
         players.black =  uniquesocket.id ;
-        uniquesocket.emit("playerRole","b");
+        uniquesocket.emit("playerRole",{ role:"b" , isOpponentAlreadyThere : players.white });
+        io.emit("updateChessBoard" , chess.fen() ); 
     }else{
         uniquesocket.emit("spectatorRole");
+        io.emit("updateChessBoard" , chess.fen() ); 
     }
 
     console.log('connection 2 - ' , players);
