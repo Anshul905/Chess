@@ -239,11 +239,14 @@ function getTargetBox(row, col) {
 }
 
 
+// Buttons 
 
+let canLoad = false;
 
 // reset button functionality 
 const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', () => {
+    canLoad = true;
     socket.emit('resetGame');
 });
 socket.on("resetGameConfirmed" , function() { 
@@ -271,6 +274,7 @@ socket.on("resetGameConfirmed" , function() {
 //new button functionality 
 const newGameButton = document.getElementById('newGameButton');
 newGameButton.addEventListener('click', () => {
+    canLoad = true ;
     socket.emit('newGameButton');
 });
 socket.on("newGameConfirmed" , function() { 
@@ -299,7 +303,11 @@ socket.on("newGameConfirmed" , function() {
 //load button functionality 
 const loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', () => {
-    socket.emit('loadButton');
+    if(canLoad)
+        socket.emit('loadButton');
+    else 
+        console.log('Nothing to reload');
+        
 });
 socket.on("loadGameConfirmed" , function() { 
     console.log('loadGameConfirmed in chessgame.js');
