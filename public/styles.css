@@ -57,3 +57,29 @@ body{
 .flipped .piece {
     transform: rotate(180deg);
 }
+
+
+.details {
+    font-size: 24px;
+    font-weight: bold;
+}
+/* .status {
+    font-size: 24px;
+    font-weight: bold;
+} */
+/* .checkmate { color: red; }
+.check { color: orange; }
+.continue { color: green; } */
+
+
+.button{
+    border: 2px solid rgb(168, 121, 121);
+    border-radius: 20px;
+    margin: 10px auto;
+    color: black;
+    padding: 10px 30px;
+    background-color: rgb(108, 134, 134);
+}
+.button:hover{
+    background-color: rgb(88, 173, 173);
+}

@@ -13,29 +13,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        .details {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        /* .status {
-            font-size: 24px;
-            font-weight: bold;
-        } */
-        /* .checkmate { color: red; }
-        .check { color: orange; }
-        .continue { color: green; } */
-
-
-        .button{
-            border: 2px solid rgb(168, 121, 121);
-            border-radius: 20px;
-            margin: 10px auto;
-            color: black;
-            padding: 10px 30px;
-            background-color: rgb(108, 134, 134);
-        }
-        .button:hover{
-            background-color: rgb(88, 173, 173);
+        #playerId{
+            color: rgb(113, 113, 197);
         }
     </style>
         
@@ -50,6 +29,7 @@
         </div>
         
         <div class="gameData details"> 
+            <h1 id="playerId">You are white</h1> 
             <h1 id="currentPlayer">White to play now</h1> 
             <h1 id="gameStatus">Game Status : continues</h1>
             <h1 id="gameResult">Game Result : None</h1>

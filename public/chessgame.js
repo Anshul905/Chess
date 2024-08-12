@@ -112,11 +112,18 @@ const getPieceUnicode = (piece) => {
 }
 
 
+const pid = document.querySelector("#playerId");
 
 socket.on("playerRole" , function(role) { 
     console.log('1. playerRole in chessgame.js');
     
     const pieceColor = role==="w" ? "WHITE" : "BLACK" ;
+
+    pid.innerHTML = "You are playing with "
+    pid.innerHTML += role==="w" ? "White" : "Black"
+    pid.innerHTML += " side"
+    
+
     console.log(`You are assigned with ${pieceColor} pieces`); 
     playerRole = role ;
     renderBoard();
@@ -125,6 +132,7 @@ socket.on("spectatorRole" , function() {
     console.log('1. spectatorRole in chessgame.js');
     console.log("1. You are a spectator");
     playerRole = null ;
+    pid.innerHTML = "You are a Spectator"
     renderBoard();
 });
 
