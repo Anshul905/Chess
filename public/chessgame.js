@@ -160,6 +160,11 @@ socket.on("spectatorRole" , function() {
     gr.innerHTML  = lastMove.grText 
     p.innerHTML  = lastMove.pText  
 
+
+    resetButton.style.display = 'none'
+    newGameButton.style.display = 'none'
+    loadButton.style.display = 'none'
+
     renderBoard();
 
 });
@@ -292,6 +297,7 @@ function getTargetBox(row, col) {
 
 
 // Buttons 
+
 
 let canLoad = false;
 
@@ -428,6 +434,7 @@ socket.on("loadGameConfirmed" , function() {
 
 
 
+
 function saveState() {
     console.log('saving data');
     
@@ -445,8 +452,6 @@ function saveState() {
     
 }
   
-
-
 function loadState() {
     console.log('retrieving data');
     
